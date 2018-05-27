@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+ 
+<head>
+    <title>Responsive web Design</title>
+    <meta charset="utf8">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	 
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	 
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<style>
+		#second_form{
+		  display:none;
+		}
+		 
+		#div1{
+		  width:90%;
+		  border:2px solid;
+		  border-radius:4px;
+		  padding:10px;
+		  height:300px;
+		}
+		#div2{
+		  width:90%;
+		  height:150px;
+		  border:2px solid;
+		  border-radius:4px;
+		  padding:10px;
+		}
+		 
+		.drag{
+		  width:100%;
+		  height:50px;
+		  padding:5px;
+		  border:2px solid;
+		  border-radius:4px;
+		  cursor:pointer;
+		}
+	</style>
+</head>
+               
+<body>
+    <form>
+
+
+        <div class="container" id="first_form">
+            <div class="row">
+                <div class="col-md-2 col-xs-12">
+                    LEFT PANEL
+                </div>
+                <div class="col-md-8 col-xs-12">
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <div>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Please Enter your name" pattern="[A-Za-z ]{2,15}"
+                                title="Alphanumeric character min 2 max 15" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="name">Mobile</label>
+                        <div>
+                            <input type="tel" class="form-control" name="mobile" id="mobile" placeholder="Please Enter your ph number" pattern="[0-9]{10}"
+                                title="Phone Number" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="button" onclick="return ValidForm()" value="Submit" class="btn btn-primary" />
+                    </div>
+
+
+
+                </div>
+                <div class="col-md-2 col-xs-12">
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="r1">Please Select</label>
+                            <div>
+                                <input required type="radio" id="r1" name="r1" onclick="getListValues()" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select required class="form-control" id="list1" name="list1">
+                                <option value="">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select required class="form-control" id="list2" name="list2">
+                                <option value="">Please Select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select required class="form-control" id="list3" name="list3">
+                                <option value="">Please Select</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="container" id="second_form">
+            <div class="row">
+                <div class="col-md-6 col-xs-12">
+                    <div id="div1" ondrop="drop(event,1)" ondragover="dragOver(event)">
+
+                    </div>
+
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <div id="div2" ondrop="drop(event,2)" ondragover="dragOver(event)">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <input type="button" onclick="return submitForm()" value="Submit" class="btn btn-primary" />
+                </div>
+
+            </div>
+        </div>
+
+
+    </form>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Some text in the modal.</p>
+                    <p id="msg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    
+</body>
+<script>
+function ValidForm(){
+ 
+  if( $('#list1').val() == '' ){
+	alert('Please select value from list1');
+    return false;
+  }
+  if( $('#list2').val() == '' ){
+	alert('Please select value from list2');
+    return false;
+  }
+  if( $('#list3').val() == '' ){
+	alert('Please select value from list3');
+    return false;
+  }
+  var regex = /^[A-Za-z ]{2,15}$/;
+  if(!regex.test($('#name').val())){
+	alert('Please Enter alphanumeric character for name min 2 max 15');
+    return false;
+  }
+ 
+  regex = /^[0-9]{10}$/;
+  if(!regex.test($('#mobile').val())){
+	alert('Please Enter your ph number(10 digit)');
+    return false;
+  }
+ 
+  $('#first_form').hide();
+  $('#second_form').show();
+ 
+  getPlanValues()
+}
+ 
+function getListValues(){
+  populateList('list1','https://api.myjson.com/bins/vg53m');
+  populateList('list2','https://api.myjson.com/bins/vg53m');
+  populateList('list3','https://api.myjson.com/bins/vg53m');
+}
+function populateList(id,url){     
+	$.ajax({
+		type:"GET",
+		crossdomain:true,
+		url:"https://api.myjson.com/bins/vg53m",
+		success:function(resp,status){
+			$('#'+id).find('option').remove();
+			$('#'+id).append($('<option>',{
+				'value':'',
+				'text':'Please Select'
+				}
+			));
+			$.each(resp,function(i,item){     
+				$('#'+id).append($('<option>',{
+					'value':item.value,
+					'text':item.text
+					}
+				));
+			});
+		},
+		error:function(resp,status){
+	   
+		}
+	});
+}
+ 
+ 
+ 
+function getPlanValues(){
+	$('#div1').html('');
+	$('#div2').html('');
+	$.ajax({
+		type:"GET",
+		crossdomain:true,
+		url:"https://api.myjson.com/bins/19br7m",
+		success:function(resp,status){
+			$.each(resp,function(i,item){     
+			var div= '<div class="drag" draggable="true" ondragstart="dragStart(event)" data-name="'+item.name+'" id="'+i+'" data-value="'+item.value+'">'+item.name+'<br>'+item.value+'</div>';
+			$('#div1').append(div);
+		   
+			});
+		},
+		error:function(resp,status){
+	   
+		}
+	});
+}
+ 
+function drop(e,type){
+	var div = e.dataTransfer.getData("text");
+	if(type == 2 && $('#div2').find('.drag').length>=1){
+		return false;
+	}
+	if (e.target.id !== 'div1' && e.target.id !== 'div2')
+		return false;
+		e.target.append(document.getElementById(div));
+	}
+function dragOver(e){
+	e.preventDefault();
+}
+function dragStart(e){
+	e.dataTransfer.setData("text",e.target.id);
+}
+ 
+function submitForm(){
+	var data = {
+		"name": $('#name').val(),
+		"mobile": $('#mobile').val(),
+		"list1": $('#list1').val(),
+		"list2": $('#list2').val(),
+		"list3": $('#list3').val(),
+		"div_val" : {
+			"name": $($('#div2').find('.drag')[0]).data("name"),
+			"value": $($('#div2').find('.drag')[0]).data("value")
+		}
+	};
+ 
+	$.ajax({
+		type:"POST",
+		url:"https://api.myjson.com/bins/19br7m",
+		crossdomain:true,
+		contentType:"application/json",
+		data: JSON.stringify(data),
+		success: function(resp,status){
+					console.log(resp);
+		  $('#myModal').modal('show');
+		},
+		error: function(resp,status){
+					console.log(resp);
+		}
+	});
+}
+</script>
+</html>
